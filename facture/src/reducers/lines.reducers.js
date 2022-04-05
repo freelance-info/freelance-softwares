@@ -5,6 +5,7 @@ import {
   VAT_RATE_COL_ID,
   AMOUNT_EXCLUDING_TAX_COL_ID,
   AMOUNT_INCLUDING_TAX_COL_ID,
+  UNIQUE_KEY_COL_ID,
 } from '../utils/globals';
 
 export const linesReducer = ({
@@ -47,7 +48,7 @@ export const linesReducer = ({
       newUnsaved = true;
       break;
     case 'addLine':
-      newLines.push(addLineId({}));
+      newLines.push(addLineId({}, UNIQUE_KEY_COL_ID));
       cols.forEach(col => {
         if (col.defaultValue) {
           newLines[newLines.length - 1][col.id] = col.defaultValue;
@@ -85,7 +86,7 @@ export const linesReducer = ({
     case 'duplicateSelected':
       lines.forEach((line, index) => {
         if (selectedLines.some(idx => index === idx)) {
-          newLines.push(addLineId({ ...line }));
+          newLines.push(addLineId({ ...line }, UNIQUE_KEY_COL_ID));
           newHighlightedLines.push(newLines.length - 1);
         }
       });

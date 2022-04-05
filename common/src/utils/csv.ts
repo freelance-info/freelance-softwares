@@ -29,7 +29,7 @@ export async function writeData(path, cols, data) {
 }
 
 export async function readData(path, cols) {
-  const numberCols = cols.filter(col => col.type === 'Number');
+  const numberCols = cols.filter(col => col.type === 'Number' || col.type === 'Price');
   await fileExistsAndWritable(path);
 
   return new Promise(resolve => {

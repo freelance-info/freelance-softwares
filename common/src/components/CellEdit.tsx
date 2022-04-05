@@ -1,20 +1,16 @@
-import React from 'react';
-import { Dropdown, Popup } from 'semantic-ui-react';
-import {
-  string,
-  func,
-  shape,
-  node,
-} from 'prop-types';
+import React from "react";
+import { Button, Dropdown, Popup } from "semantic-ui-react";
+import { string, func, shape, node } from "prop-types";
 
-const CellEdit = ({ lineId, def, value, onChange }) => {
-  const theValue = value === null || value === undefined ? def.defaultValue : value;
+const CellEdit = ({ lineId, def, value, onChange, onDetailsClick }) => {
+  const theValue =
+    value === null || value === undefined ? def.defaultValue : value;
   const divStyle = { minWidth: def.width };
   const key = `input-${def.id}-${lineId}`;
   let result;
   let div;
   switch (def.type) {
-    case 'Text':
+    case "Text":
       div = (
         <div className="ui input fluid" style={divStyle}>
           <input
@@ -23,16 +19,17 @@ const CellEdit = ({ lineId, def, value, onChange }) => {
             type="text"
             required
             placeholder={def.title}
-            value={theValue || ''}
-            onChange={event => onChange(event.target.value)}
+            value={theValue || ""}
+            onChange={(event) => onChange(event.target.value)}
           />
         </div>
       );
-      result = <Popup content={theValue || ''} trigger={div} />;
+      result = <Popup content={theValue || ""} trigger={div} />;
       break;
-    case 'Number':
+    case "Price":
+    case "Number":
       result = (
-        <div className="ui right labeled input fluid" style={divStyle}>
+        <div className={['ui', 'right', def.type === 'Price' ? 'labeled' : '', 'input', 'fluid'].join(' ')} style={divStyle}>
           <input
             key={key}
             type="number"
@@ -41,14 +38,14 @@ const CellEdit = ({ lineId, def, value, onChange }) => {
             min="0"
             step="100"
             placeholder={def.title}
-            value={theValue || ''}
-            onChange={event => onChange(event.target.value)}
+            value={theValue || ""}
+            onChange={(event) => onChange(event.target.value)}
           />
-          <div className="ui basic label">€</div>
+          { def.type === 'Price' && <div className="ui basic label">€</div> }
         </div>
       );
       break;
-    case 'Date':
+    case "Date":
       result = (
         <div className="ui input fluid" style={divStyle}>
           <input
@@ -59,14 +56,14 @@ const CellEdit = ({ lineId, def, value, onChange }) => {
             min="2000-01-01"
             max="2100-01-01"
             placeholder={def.title}
-            value={theValue || ''}
-            onChange={event => onChange(event.target.value)}
+            value={theValue || ""}
+            onChange={(event) => onChange(event.target.value)}
           />
         </div>
       );
       break;
-      
-    case 'Select':
+
+    case "Select":
       div = (
         <div className="ui input fluid" style={divStyle}>
           <Dropdown
@@ -76,12 +73,31 @@ const CellEdit = ({ lineId, def, value, onChange }) => {
             selection
             floating
             options={def.options}
-            value={theValue || ''}
+            value={theValue || ""}
             onChange={(_event, { value: val }) => onChange(val)}
           />
         </div>
       );
-      result = <Popup key={`popup-${key}`} content={theValue || ''} trigger={div} />;
+      result = (
+        <Popup key={`popup-${key}`} content={theValue || ""} trigger={div} />
+      );
+      break;
+    case "Button":
+      div = (
+        <div className="ui input fluid" style={divStyle}>
+          <Button
+            key={key}
+            positive
+            labelPosition="right"
+            icon="plus"
+            content="Détails"
+            onClick={onDetailsClick}
+          />
+        </div>
+      );
+      result = (
+        <Popup key={`popup-${key}`} content={theValue || ""} trigger={div} />
+      );
       break;
     default:
   }

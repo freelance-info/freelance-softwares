@@ -1,20 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Form, Button, Select, DropdownItemProps } from 'semantic-ui-react';
 import { func, instanceOf, bool, string } from 'prop-types';
+import { ParametersContext } from '../contexts/parameters.context';
 
 type ParametersType = {
-  initialParametersValue: Map<string, string>;
   open: boolean;
-  close: (arg1: any) => void;
+  setOpen: (arg) => void;
   parameterKeys: Map<string, DropdownItemProps[]>;
   Logo: any;
 };
-const Parameters = ({ initialParametersValue, open, close, parameterKeys, Logo }: ParametersType) => {
-  const [parameterValues, setParameterValues] = useState(new Map(initialParametersValue));
+const Parameters = ({ open, setOpen, parameterKeys, Logo }: ParametersType) => {
+  const [parameterValues, setParameterValues] = useContext(ParametersContext);
 
   useEffect(() => {
-    setParameterValues(new Map(initialParametersValue));
-  }, [initialParametersValue]);
+    if (parameterValues.size === 0) {
+      // Try to load from local storage
+      const savedParameters = new Map();
+      parameterKeys.forEach((_value, key) => {
+        const value = localStorage.getItem(key);
+        if (value) {
+          savedParameters.set(key, value);
+        }
+      });
+      if (savedParameters.size < parameterKeys.size) {
+        // If parameters are missing, open the parameter popup to force user to set them
+        setOpen(true);
+      }
+      setParameterValues(new Map(savedParameters));
+    }
+  }, [parameterKeys]);
 
   const [errorMessage, setErrorMessage] = useState(undefined);
 
@@ -27,7 +41,9 @@ const Parameters = ({ initialParametersValue, open, close, parameterKeys, Logo }
       }
     });
     if (allFieldsOk) {
-      close(parameterValues);
+      setParameterValues(parameterValues);
+      parameterKeys.forEach((_value, parameterKey) => localStorage.setItem(parameterKey, parameterValues.get(parameterKey)));
+      setOpen(false);
     }
   };
 
@@ -112,11 +128,10 @@ const Parameters = ({ initialParametersValue, open, close, parameterKeys, Logo }
 };
 
 Parameters.propTypes = {
-  initialParametersValue: instanceOf(Map).isRequired, // Map
   parameterKeys: instanceOf(Map).isRequired, // Map
   Logo: func,
+  setOpen: func.isRequired,
   open: bool.isRequired,
-  close: func.isRequired,
 };
 
 export default Parameters;

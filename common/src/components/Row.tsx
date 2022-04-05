@@ -11,10 +11,11 @@ type RowType = {
   errors: any[];
   select: (arg1: any, arg2: any) => void;
   rowChange: (arg1: any, arg2: any, arg3: any) => void;
+  rowDetails: (line) => void;
   uniqueKeyColId: string;
 };
 export const Row = ({
-  line, lineNumber, errors, select, rowChange, uniqueKeyColId,
+  line, lineNumber, errors, select, rowChange, rowDetails, uniqueKeyColId,
 }: RowType) => {
   const [{ cols, selectedLines, highlightedLines }] = useContext(LinesContext);
   const lineId = line[uniqueKeyColId];
@@ -46,6 +47,7 @@ export const Row = ({
               def={col}
               value={line[col.id]}
               onChange={val => rowChange(lineNumber, col, val)}
+              onDetailsClick={() => rowDetails(line)}
             />
             )
           }

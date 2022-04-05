@@ -3,7 +3,8 @@ import { instanceOf, shape, string } from 'prop-types';
 
 export const FooterCell = ({ col, computedTotals }) => {
   let total = computedTotals.get(col.id);
-  total = total ? `${total}€` : '';
+  const unit = col.type === 'Price' ? '€' : '';
+  total = total ? `${total}${unit}` : '';
   return (<th key={`total-${col.id}`}>{total}</th>);
 };
 

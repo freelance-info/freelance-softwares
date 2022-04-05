@@ -7,7 +7,7 @@ import { Row } from './Row';
 import { computeTotals } from '../utils/computations';
 import { LinesContext, LinesContextType } from '../contexts/lines.context';
 
-export const Table = ({ allSelected, errors, uniqueKeyColId, parameters }) => {
+export const Table = ({ allSelected, errors, uniqueKeyColId, parameters, rowDetails }) => {
   const [{ cols, lines }, dispatchLinesAction] = useContext<LinesContextType>(LinesContext);
 
   const [sortState, setSortState] = useState({ column: 'date', direction: 'ascending' });
@@ -33,7 +33,6 @@ export const Table = ({ allSelected, errors, uniqueKeyColId, parameters }) => {
   const select = (lineNumber, checked) => {
     dispatchLinesAction({ type: 'select', checked, lineNumber });
   };
-
 
   useEffect(() => {
     dispatchLinesAction({ type: 'initCols', parameters });
@@ -61,6 +60,7 @@ export const Table = ({ allSelected, errors, uniqueKeyColId, parameters }) => {
       errors={errors}
       select={select}
       rowChange={rowChange}
+      rowDetails={rowDetails}
     />
   );});
 

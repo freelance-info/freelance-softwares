@@ -1,9 +1,11 @@
+.box-shadow {
+    border: 1px solid #eee;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+}
 .invoice-box {
     max-width: 800px;
     margin: auto;
     padding: 30px;
-    border: 1px solid #eee;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .15);
     font-size: 16px;
     line-height: 24px;
     font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
@@ -31,8 +33,9 @@
 
 .invoice-box table tr.top table td.title {
     font-size: 45px;
+    font-family: 'Courier New', Courier, monospace;
     line-height: 45px;
-    color: #333;
+    color: rgba(0, 0, 0, .2);
 }
 
 .invoice-box table tr.information table td {

@@ -1,4 +1,4 @@
-import { addLineId, addLinesId, sortByCol } from '@freelance-info/common';
+import { addLineId, addLinesId, sortByCol, addVat } from '@freelance-info/common';
 import {
   PARAMETER_DEFAULT_CASHING,
   PARAMETER_DEFAULT_VAT,
@@ -25,8 +25,8 @@ export const linesInitialState = {
     { id: 'nature', title: 'Nature', type: 'Text', required: true, width: '150px' },
     { id: VAT_TYPE_COL_ID, title: 'Type TVA', type: 'Select', required: true, width: '80px', defaultParamKey: PARAMETER_DEFAULT_CREDIT_TYPE },
     { id: VAT_RATE_COL_ID, title: 'TVA', type: 'Select', required: false, width: '50px', defaultParamKey: PARAMETER_DEFAULT_VAT },
-    { id: AMOUNT_EXCLUDING_TAX_COL_ID, title: 'Montant HT', type: 'Number', required: false, width: '100px' },
-    { id: 'ttc', title: 'Montant TTC', type: 'Number', required: true, width: '100px' },
+    { id: AMOUNT_EXCLUDING_TAX_COL_ID, title: 'Montant HT', type: 'Price', required: false, width: '100px' },
+    { id: 'ttc', title: 'Montant TTC', type: 'Price', required: true, width: '100px' },
     // eslint-disable-next-line max-len
     { id: 'mode', title: 'Mode', type: 'Select', required: false, width: '50px', defaultParamKey: PARAMETER_DEFAULT_CASHING },
     // eslint-disable-next-line max-len
@@ -72,8 +72,7 @@ export const linesReducer = ({
           || action.col.id === VAT_RATE_COL_ID) {
         const vatRate = action.col.id === VAT_RATE_COL_ID ? action.val : newLines[action.lineNumber][VAT_RATE_COL_ID];
         const exclTax = action.col.id === AMOUNT_EXCLUDING_TAX_COL_ID ? action.val : newLines[action.lineNumber][AMOUNT_EXCLUDING_TAX_COL_ID];
-        const vat = vatRate / 100;
-        newLines[action.lineNumber][AMOUNT_INCLUDING_TAX_COL_ID] = Math.round(exclTax * (1 + vat) * 100) / 100;
+        newLines[action.lineNumber][AMOUNT_INCLUDING_TAX_COL_ID] = addVat(vatRate, exclTax);
       }
       newUnsaved = true;
       break;

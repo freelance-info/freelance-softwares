@@ -12,10 +12,32 @@ Le logiciel est préchargé avec un exemple de facture et de client, à supprime
 
 ## Les _Factures émises et reçues_ 
 
-Le modèle contient toutes les mentions légales minimales.
+Le modèle contient toutes les mentions légales minimales:
+- La date de la facture
+- Le numéro de la facture
+- La date de la vente ou de la prestation de service
+- La dénomination sociale (ou nom et prénom pour un entrepreneur individuel),
+- L'adresse du siège social et l'adresse de facturation (si différente),
+- Le numéro de Siren ou Siret, le code NAF, la forme juridique et le capital social (pour les sociétés), le numéro RCS et ville du greffe d'immatriculation (pour les commerçants), le numéro au répertoire des métiers et département d'immatriculation (pour les artisans).
+- L'identité de l'acheteur ou du client
+- Le numéro du bon de commande uniquement s'il a été préalablement émis par l'acheteur.
+- Le numéro d'identification à la TVA
+- La nature, marque, et référence des produits doivent être mentionnés ainsi que les matériaux fournis et la main d'oeuvre pour les prestations.
+- Le prix catalogue
+- Le taux de TVA légalement applicable
+- L'éventuelle réduction de prix
+- La somme totale à payer hors taxe (HT) et toutes taxes comprises (TTC)
+- L'adresse de facturation mais uniquement si elle est différente de celle du siège social de l'entreprise.
+- La date à laquelle le paiement doit intervenir ou le délai de paiement
+- Les conditions d'escompte en cas de paiement anticipé
+- Les taux de pénalités en cas de non paiement ou de retard de paiement (40 €).
+- L'existence et la durée de la garantie légale de conformité de deux ans pour certains biens
+
 Le formulaire propose une aide à la saisie pour la plupart des champs.
-L'export se fait sous forme d'un template .docx (Word, OpenOffice), donc modifiable par vos soins.
+L'export se fait sous forme d'un template .pdf.
 Vous pouvez également joindre le scan d'une facture ou d'un ticket de caisse.
+
+
 
 ## Sauvegarde des données
 

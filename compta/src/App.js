@@ -1,45 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tab, Menu } from 'semantic-ui-react';
-import { Parameters } from '@freelance-info/common';
+import { Parameters, ParametersContext } from '@freelance-info/common';
 import Main from './components/Main';
 import { PARAMETER_KEYS, PARAMETER_ENTREPRISE_NAME } from './utils/globals';
 import Logo from './Logo/Logo';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    let version = '';
+export const App = () => {
+  const [showParam, setShowParam] = useState(undefined);
+  const [parameters, setParameters] = useState(undefined);
+  const [version, setVersion] = useState(undefined);
+  const [tabFiles, setTabFiles] = useState([]);
+  useEffect(() => {
+    // Version
+    let theVersion = '';
     if (window && window.require) {
-      version = window.require('@electron/remote')?.app?.getVersion();
+      theVersion = window.require('@electron/remote')?.app?.getVersion();
     }
-    this.state = {
-      parameters: new Map(),
-      showParam: false,
-      tabFiles: [],
-      version,
-    };
-    this.onSaveParameters = this.onSaveParameters.bind(this);
-    this.onTabFilesChange = this.onTabFilesChange.bind(this);
-  }
-
-  componentDidMount() {
-    const { parameters } = this.state;
-
-    if (parameters.size === 0) {
-      // Try to load from local storage
-      const savedParameters = new Map();
-      PARAMETER_KEYS.forEach((_value, key) => {
-        const value = localStorage.getItem(key);
-        if (value) {
-          savedParameters.set(key, value);
-        }
-      });
-      if (savedParameters.size < PARAMETER_KEYS.size) {
-        // If parameters are missing, open the parameter popup to force user to set them
-        this.setState({ showParam: true });
-      }
-      this.setState({ parameters: savedParameters });
-    }
+    setVersion(theVersion);
 
     // Window title
     let title = 'Freelance-compta';
@@ -50,57 +27,65 @@ class App extends React.Component {
     if (titleElement && titleElement.innerText) {
       titleElement.innerText = title;
     }
-  }
+  }, [parameters]);
 
-  onSaveParameters(parametersValue) {
-    this.setState({ parameters: parametersValue });
-    PARAMETER_KEYS.forEach((_value, parameterKey) => localStorage.setItem(parameterKey, parametersValue.get(parameterKey)));
-    this.setState({ showParam: false });
-  }
+  const onTabFilesChange = filePath => {
+    const newTabFiles = [...tabFiles];
+    newTabFiles[0] = filePath;
+    setTabFiles(newTabFiles);
+  };
 
-  onTabFilesChange(filePath) {
-    this.setState(prevState => {
-      const newTabFiles = [...prevState.tabFiles];
-      newTabFiles[0] = filePath;
-      return { tabFiles: newTabFiles };
-    });
-  }
+  // Tabs
+  const displayableTabFiles = tabFiles.map(tabFile => {
+    if (tabFile) {
+      return (
+        <Menu.Item key={tabFile} title={tabFile}>
+          {new URL(`file:///${tabFile}`).pathname.split('/').pop()}
+        </Menu.Item>
+      );
+    }
+    return undefined;
+  });
+  const panes = [
+    {
+      menuItem: displayableTabFiles[0] || 'Nouveau fichier',
+      render: () => (
+        <Tab.Pane style={{ overflowX: 'auto' }}>
+          <Main
+            key="account-ledger"
+            parameters={parameters}
+            fileChange={onTabFilesChange}
+          />
+        </Tab.Pane>
+      ),
+    },
+  ];
 
-  render() {
-    const { parameters, showParam, tabFiles, version } = this.state;
-
-    // Tabs
-    const displayableTabFiles = tabFiles.map(tabFile => {
-      if (tabFile) {
-        return (
-          <Menu.Item key={tabFile} title={tabFile}>
-            { new URL(`file:///${tabFile}`).pathname.split('/').pop() }
-          </Menu.Item>
-        );
-      }
-      return undefined;
-    });
-    const panes = [
-      {
-        menuItem: displayableTabFiles[0] || 'Nouveau fichier',
-        render: () => (
-          <Tab.Pane style={{ overflowX: 'auto' }}>
-            <Main key="account-ledger" parameters={parameters} fileChange={this.onTabFilesChange} />
-          </Tab.Pane>
-        ),
-      },
-    ];
-
-    return (
-      <main style={{ padding: '10px', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', alignSelf: 'flex-end', marginBottom: '-35px' }}>
-          <div style={{ marginRight: '10px', display: 'flex', alignItems: 'center' }}>
+  return (
+    <ParametersContext.Provider value={[parameters, setParameters]}>
+      <main
+        style={{ padding: '10px', display: 'flex', flexDirection: 'column' }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignSelf: 'flex-end',
+            marginBottom: '-35px',
+          }}
+        >
+          <div
+            style={{
+              marginRight: '10px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
             {`Version ${version}`}
           </div>
           <button
             type="button"
             className="ui icon button gray"
-            onClick={() => this.setState({ showParam: true })}
+            onClick={() => setShowParam(true)}
             title="Paramètres"
           >
             <i className="cog icon" />
@@ -108,15 +93,13 @@ class App extends React.Component {
         </div>
         <Parameters
           parameterKeys={PARAMETER_KEYS}
-          initialParametersValue={parameters}
           Logo={Logo}
           open={showParam}
-          close={this.onSaveParameters}
         />
         <Tab panes={panes} />
       </main>
-    );
-  }
-}
+    </ParametersContext.Provider>
+  );
+};
 
 export default App;

@@ -2,7 +2,7 @@ import {
     Message, FileButtons, BottomButtons, Table, LinesContext, scrollToBottom,
 } from '@freelance-info/common';
 import { useState, useMemo, useReducer } from 'react';
-import { DATE_COL_ID, UNIQUE_KEY_COL_ID } from '../utils/globals';
+import { DATE_COL_ID, SCROLLABLE_ELEMENT_ID, UNIQUE_KEY_COL_ID } from '../utils/globals';
 import { linesInitialState } from '../reducers/lines.initialState';
 import { linesReducer } from '../reducers/lines.reducers';
 import Invoice from './Invoice';
@@ -33,7 +33,7 @@ export default function Invoices({parameters}) {
     // LINES
     const addLine = () => {
         dispatchLinesAction({ type: 'addLine' });
-        setTimeout(() => scrollToBottom(`#table-container`), 200);
+        setTimeout(() => scrollToBottom(`#${SCROLLABLE_ELEMENT_ID}`), 200);
     };
     // Return error object if any for given line
     const validateLine = (line, lineNumber, columns) => ({
@@ -43,10 +43,17 @@ export default function Invoices({parameters}) {
 
     // SHOW DETAILS
     const [selectedInvoice, setSelectedInvoice] = useState(null);
+    const invoiceElement = useMemo(() => (
+        <Invoice
+            parameters={parameters}
+            invoice={selectedInvoice}
+            setSelectedInvoice={setSelectedInvoice}
+        />
+    ), [selectedInvoice, parameters]); 
 
     return (
         <>
-        { selectedInvoice && <Invoice parameters={parameters} invoice={selectedInvoice} /> }
+        { selectedInvoice && invoiceElement}
         { !selectedInvoice &&  (
             <LinesContext.Provider value={linesContextValue}>
                 <article>
@@ -59,18 +66,20 @@ export default function Invoices({parameters}) {
                             fileChange={() => {}}
                             setActionMessage={setActionMessage}
                             validateLine={validateLine}
+                            scrollableElementId={SCROLLABLE_ELEMENT_ID}
                         />
                         {actionMessage && <Message type={actionMessage.type} message={actionMessage.message} />}
                     </section>
             
-                    <section id="table-container" style={{ height: '75vh', overflow: 'auto' }}>
+                    <section id={SCROLLABLE_ELEMENT_ID} style={{ height: '75vh', overflow: 'auto' }}>
                         <Table
                             uniqueKeyColId={UNIQUE_KEY_COL_ID}
                             allSelected={selectedLines.length > 0 && selectedLines.length === lines.length}
                             errors={lineErrors}
-                            scrollableElementId="table-container"
+                            scrollableElementId={SCROLLABLE_ELEMENT_ID}
                             setActionMessage={setActionMessage}
                             parameters={parameters}
+                            rowDetails={(selectedInvoice) => setSelectedInvoice(selectedInvoice)}
                         />
                     </section>
             

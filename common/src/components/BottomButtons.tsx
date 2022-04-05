@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { func } from 'prop-types';
+import { any, func } from 'prop-types';
 import { Button } from 'semantic-ui-react';
 import { LinesContext } from '../contexts/lines.context';
 
@@ -44,5 +44,5 @@ export const BottomButtons = ({ addLine, children }) => {
 
 BottomButtons.propTypes = {
   addLine: func.isRequired,
-  vat: func.isRequired,
+  children: any,
 };
