@@ -1,4 +1,5 @@
 import React, { useState, useReducer, useMemo } from 'react';
+import { Button } from 'semantic-ui-react';
 import { instanceOf, func } from 'prop-types';
 import {
   Message, Search, FileButtons, BottomButtons, Table, scrollToBottom, LinesContext,
@@ -6,7 +7,7 @@ import {
 import { searchLines } from '../utils/search';
 import { linesReducer, linesInitialState } from '../reducers/lines.reducer';
 import { VAT } from './VAT';
-import { DATE_COL_ID, UNIQUE_KEY_COL_ID } from '../utils/globals';
+import { DATE_COL_ID, SCROLLABLE_ELEMENT_ID, UNIQUE_KEY_COL_ID } from '../utils/globals';
 
 // Account Ledger ("Livre des recettes" in french)
 const Main = ({ parameters, fileChange }) => {
@@ -46,7 +47,7 @@ const Main = ({ parameters, fileChange }) => {
   // LINES
   const addLine = () => {
     dispatchLinesAction({ type: 'addLine' });
-    setTimeout(() => scrollToBottom(`#table-container`), 200);
+    setTimeout(() => scrollToBottom(`#${SCROLLABLE_ELEMENT_ID}`), 200);
   };
   // Return error object if any for given line
   const validateLine = (line, lineNumber, columns) => ({
@@ -72,12 +73,12 @@ const Main = ({ parameters, fileChange }) => {
           <Search cols={cols} onChange={() => setSearchResults([])} onSearchClick={search} />
         </section>
 
-        <section id="table-container" style={{ height: '75vh', overflow: 'auto' }}>
+        <section id={SCROLLABLE_ELEMENT_ID} style={{ height: '75vh', overflow: 'auto' }}>
           <Table
             uniqueKeyColId={UNIQUE_KEY_COL_ID}
             allSelected={selectedLines.length > 0 && selectedLines.length === lines.length}
             errors={lineErrors}
-            scrollableElementId="table-container"
+            scrollableElementId={SCROLLABLE_ELEMENT_ID}
             setActionMessage={setActionMessage}
             parameters={parameters}
           />

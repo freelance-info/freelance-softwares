@@ -7,7 +7,7 @@ import Logo from './Logo/Logo';
 
 export const App = () => {
   const [showParam, setShowParam] = useState(undefined);
-  const [parameters, setParameters] = useState(undefined);
+  const [parameters, setParameters] = useState(new Map());
   const [version, setVersion] = useState(undefined);
   const [tabFiles, setTabFiles] = useState([]);
   useEffect(() => {

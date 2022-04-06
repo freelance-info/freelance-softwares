@@ -1,6 +1,5 @@
-import { computeRowCellId } from '@freelance-info/common';
-import { SCROLLABLE_ELEMENT_ID, DATE_COL_ID } from './globals';
-import { scrollTo } from '@freelance-info/common/src/utils/scroll';
+import { scrollTo, computeRowCellId } from '@freelance-info/common';
+import { DATE_COL_ID, SCROLLABLE_ELEMENT_ID } from './globals';
 import { parseDate } from './date';
 
 export const searchLines = (lines, searchText, searchColId, searchResults) => {

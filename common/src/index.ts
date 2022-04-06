@@ -5,7 +5,7 @@ import { BottomButtons } from './components/BottomButtons';
 import { Table } from './components/Table';
 import Parameters from './components/Parameters';
 import { computeRowCellId, addLineId, addLinesId, addVat, substractVat } from './utils/computations';
-import { scrollToBottom } from './utils/scroll';
+import { scrollToBottom, scrollTo } from './utils/scroll';
 import { sortByCol } from './utils/sort';
 import { LinesContext } from './contexts/lines.context';
 import { ParametersContext } from './contexts/parameters.context';
@@ -24,6 +24,7 @@ export {
   scrollToBottom,
   addVat,
   substractVat,
+  scrollTo,
   LinesContext,
   ParametersContext,
 };
