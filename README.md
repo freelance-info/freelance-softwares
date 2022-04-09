@@ -6,6 +6,8 @@ Idéal pour les freelances qui souhaitent une base simple (**React.js**) à pers
 
 ![Minion](./compta.png)
 
+![Minion](./facture.png)
+
 # Quick start
 
 Télécharger la dernière release depuis [Github](https://github.com/freelance-info/freelance-softwares/releases)
