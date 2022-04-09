@@ -6,7 +6,7 @@ import { save, saveAs, open, readData } from '../utils/csv';
 import { computeRowCellId } from '../utils/computations';
 import { scrollTo } from '../utils/scroll';
 
-const FileButtons = ({ hasUnsavedChanges, scrollableElementId, onError, sortBy, fileChange, setActionMessage, validateLine, setLineErrors }) => {
+const FileButtons = ({ hasUnsavedChanges, scrollableElementId, onError, sortBy, fileChange, setActionMessage, validateLine, setLineErrors, uniqueKeyColId }) => {
   const [{ cols, lines }, dispatchLinesAction] = useContext<LinesContextType>(LinesContext);
   const storedCurrentFile = localStorage.getItem('accountLedger');
   const [currentFile, setCurrentFile] = useState(undefined);
@@ -43,7 +43,7 @@ const FileButtons = ({ hasUnsavedChanges, scrollableElementId, onError, sortBy, 
       }
       readData(currentFile, cols)
         .then(initLines => {
-          dispatchLinesAction({ type: 'initLines', initLines });
+          dispatchLinesAction({ type: 'initLines', initLines, uniqueKeyColId });
         })
         .catch(error => {
           const message = `Problème avec le fichier "${currentFile}": ${error.message}`;
@@ -57,17 +57,17 @@ const FileButtons = ({ hasUnsavedChanges, scrollableElementId, onError, sortBy, 
     setCurrentFile(null);
     setActionMessage(null);
     fileChange(null);
-    dispatchLinesAction({ type: 'initLines', initLines: [] });
+    dispatchLinesAction({ type: 'initLines', initLines: [], uniqueKeyColId });
   };
   const onOpen = () => {
     open(currentFile, setCurrentFile, fileChange, setActionMessage, lines, cols)
-      .then(initLines => dispatchLinesAction({ type: 'initLines', initLines }))
+      .then(initLines => dispatchLinesAction({ type: 'initLines', initLines, uniqueKeyColId }))
       .catch(onError);
   };
   const onSaveAs = () => {
     checkErrors(lines, cols)
       .then(() => saveAs(currentFile, setCurrentFile, fileChange, lines, cols, sortBy, setActionMessage))
-      .then(initLines => dispatchLinesAction({ type: 'initLines', initLines }))
+      .then(initLines => dispatchLinesAction({ type: 'initLines', initLines, uniqueKeyColId }))
       .then(() => dispatchLinesAction({ type: 'saved' }))
       .catch(onError);
   };
@@ -75,7 +75,7 @@ const FileButtons = ({ hasUnsavedChanges, scrollableElementId, onError, sortBy, 
     if (currentFile) {
       checkErrors(lines, cols)
         .then(() => save(currentFile, lines, cols, sortBy, setActionMessage))
-        .then(initLines => dispatchLinesAction({ type: 'initLines', initLines }))
+        .then(initLines => dispatchLinesAction({ type: 'initLines', initLines, uniqueKeyColId }))
         .then(() => dispatchLinesAction({ type: 'saved' }))
         .catch(onError);
     } else {

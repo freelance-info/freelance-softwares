@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { arrayOf, bool, number, shape, string } from 'prop-types';
+import { arrayOf, bool, instanceOf, number, shape, string } from 'prop-types';
 import { Checkbox } from 'semantic-ui-react';
 import { HeaderCell } from './HeaderCell';
 import { FooterCell } from './FooterCell';
@@ -7,7 +7,15 @@ import { Row } from './Row';
 import { computeTotals } from '../utils/computations';
 import { LinesContext, LinesContextType } from '../contexts/lines.context';
 
-export const Table = ({ allSelected, errors, uniqueKeyColId, parameters, rowDetails }) => {
+type TableType = {
+  allSelected: boolean | undefined;
+  errors: unknown[] | undefined;
+  uniqueKeyColId: string;
+  parameters: unknown[];
+  rowDetails: (line) => void | undefined;
+};
+
+export const Table = ({ allSelected, errors, uniqueKeyColId, parameters, rowDetails }: TableType) => {
   const [{ cols, lines }, dispatchLinesAction] = useContext<LinesContextType>(LinesContext);
 
   const [sortState, setSortState] = useState({ column: 'date', direction: 'ascending' });
@@ -50,7 +58,6 @@ export const Table = ({ allSelected, errors, uniqueKeyColId, parameters, rowDeta
     ));
 
   const rows = lines.map((line, lineNumber) => {
-    console.log(`row-${line[uniqueKeyColId]}`, line, uniqueKeyColId);
     return (
     <Row
       key={`row-${line[uniqueKeyColId]}`}
@@ -113,6 +120,7 @@ Table.propTypes = {
     col: shape({ id: string.isRequired }),
     lineNumber: number.isRequired,
   })),
+  parameters: instanceOf(Map).isRequired,
 };
 
 Table.defaultProps = {

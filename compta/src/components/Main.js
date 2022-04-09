@@ -46,7 +46,7 @@ const Main = ({ parameters, fileChange }) => {
 
   // LINES
   const addLine = () => {
-    dispatchLinesAction({ type: 'addLine' });
+    dispatchLinesAction({ type: 'addLine', uniqueKeyColId: UNIQUE_KEY_COL_ID });
     setTimeout(() => scrollToBottom(`#${SCROLLABLE_ELEMENT_ID}`), 200);
   };
   // Return error object if any for given line
@@ -56,51 +56,52 @@ const Main = ({ parameters, fileChange }) => {
   });
 
   return (
-    <LinesContext.Provider value={linesContextValue}>
-      <article>
-
-        <section className="buttons-bar border-bottom">
-          <FileButtons
-            hasUnsavedChanges={unsaved}
-            onError={err => setActionMessage({ type: 'negative', message: err.message ?? err })}
-            sortBy={DATE_COL_ID}
-            setLineErrors={setLineErrors}
-            fileChange={fileChange}
-            setActionMessage={setActionMessage}
-            validateLine={validateLine}
-          />
-          {actionMessage && <Message type={actionMessage.type} message={actionMessage.message} />}
-          <Search cols={cols} onChange={() => setSearchResults([])} onSearchClick={search} />
-        </section>
-
-        <section id={SCROLLABLE_ELEMENT_ID} style={{ height: '75vh', overflow: 'auto' }}>
-          <Table
-            uniqueKeyColId={UNIQUE_KEY_COL_ID}
-            allSelected={selectedLines.length > 0 && selectedLines.length === lines.length}
-            errors={lineErrors}
-            scrollableElementId={SCROLLABLE_ELEMENT_ID}
-            setActionMessage={setActionMessage}
-            parameters={parameters}
-          />
-        </section>
-
-        <section className="buttons-bar border-top">
-          <BottomButtons addLine={addLine}>
-            <Button
-              color="pink"
-              labelPosition="right"
-              icon="table"
-              content="Déclaration TVA"
-              onClick={vat}
+    <>
+      <LinesContext.Provider value={linesContextValue}>
+        <article>
+          <section className="buttons-bar border-bottom">
+            <FileButtons
+              hasUnsavedChanges={unsaved}
+              onError={err => setActionMessage({ type: 'negative', message: err.message ?? err })}
+              sortBy={DATE_COL_ID}
+              setLineErrors={setLineErrors}
+              fileChange={fileChange}
+              setActionMessage={setActionMessage}
+              validateLine={validateLine}
+              uniqueKeyColId={UNIQUE_KEY_COL_ID}
+              scrollableElementId={SCROLLABLE_ELEMENT_ID}
             />
-          </BottomButtons>
-        </section>
+            {actionMessage && <Message type={actionMessage.type} message={actionMessage.message} />}
+            <Search cols={cols} onChange={() => setSearchResults([])} onSearchClick={search} />
+          </section>
 
-        {
-          showVat && <VAT open={showVat} setOpen={setShowVat} cols={cols} lines={lines} />
-        }
-      </article>
-    </LinesContext.Provider>
+          <section id={SCROLLABLE_ELEMENT_ID} style={{ height: '75vh', overflow: 'auto' }}>
+            <Table
+              uniqueKeyColId={UNIQUE_KEY_COL_ID}
+              allSelected={selectedLines.length > 0 && selectedLines.length === lines.length}
+              errors={lineErrors}
+              scrollableElementId={SCROLLABLE_ELEMENT_ID}
+              parameters={parameters}
+            />
+          </section>
+
+          <section className="buttons-bar border-top">
+            <BottomButtons addLine={addLine}>
+              <Button
+                color="pink"
+                labelPosition="right"
+                icon="table"
+                content="Déclaration TVA"
+                onClick={vat}
+              />
+            </BottomButtons>
+          </section>
+        </article>
+      </LinesContext.Provider>
+      {
+        showVat && <VAT open={showVat} setOpen={setShowVat} parameters={parameters} lines={lines} cols={cols} />
+      }
+    </>
   );
 };
 

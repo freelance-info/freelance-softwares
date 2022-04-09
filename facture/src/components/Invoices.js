@@ -32,7 +32,7 @@ export default function Invoices({parameters}) {
 
     // LINES
     const addLine = () => {
-        dispatchLinesAction({ type: 'addLine' });
+        dispatchLinesAction({ type: 'addLine', uniqueKeyColId: UNIQUE_KEY_COL_ID });
         setTimeout(() => scrollToBottom(`#${SCROLLABLE_ELEMENT_ID}`), 200);
     };
     // Return error object if any for given line
@@ -67,6 +67,7 @@ export default function Invoices({parameters}) {
                             setActionMessage={setActionMessage}
                             validateLine={validateLine}
                             scrollableElementId={SCROLLABLE_ELEMENT_ID}
+                            uniqueKeyColId={UNIQUE_KEY_COL_ID}
                         />
                         {actionMessage && <Message type={actionMessage.type} message={actionMessage.message} />}
                     </section>
@@ -77,7 +78,6 @@ export default function Invoices({parameters}) {
                             allSelected={selectedLines.length > 0 && selectedLines.length === lines.length}
                             errors={lineErrors}
                             scrollableElementId={SCROLLABLE_ELEMENT_ID}
-                            setActionMessage={setActionMessage}
                             parameters={parameters}
                             rowDetails={(selectedInvoice) => setSelectedInvoice(selectedInvoice)}
                         />

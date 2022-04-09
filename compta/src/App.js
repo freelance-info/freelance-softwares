@@ -6,7 +6,7 @@ import { PARAMETER_KEYS, PARAMETER_ENTREPRISE_NAME } from './utils/globals';
 import Logo from './Logo/Logo';
 
 export const App = () => {
-  const [showParam, setShowParam] = useState(undefined);
+  const [showParam, setShowParam] = useState(false);
   const [parameters, setParameters] = useState(new Map());
   const [version, setVersion] = useState(undefined);
   const [tabFiles, setTabFiles] = useState([]);
@@ -95,6 +95,7 @@ export const App = () => {
           parameterKeys={PARAMETER_KEYS}
           Logo={Logo}
           open={showParam}
+          setOpen={setShowParam}
         />
         <Tab panes={panes} />
       </main>

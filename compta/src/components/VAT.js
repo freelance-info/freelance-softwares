@@ -7,9 +7,11 @@ import React, {
   useEffect,
   useMemo,
   useCallback,
-  useContext,
+  useReducer,
 } from 'react';
-import { func, bool } from 'prop-types';
+import {
+  func, bool, instanceOf, arrayOf, shape, string,
+} from 'prop-types';
 import { Button, Form, Modal } from 'semantic-ui-react';
 import { Table, LinesContext } from '@freelance-info/common';
 import {
@@ -20,13 +22,30 @@ import {
   VAT_RATE_COL_ID,
   AMOUNT_EXCLUDING_TAX_COL_ID,
   UNIQUE_KEY_COL_ID,
+  SCROLLABLE_ELEMENT_ID,
 } from '../utils/globals';
 import { getQuarters, getStartDateOfQuarter, getEndDateOfQuarter } from '../utils/date';
+import { linesReducer, linesInitialState } from '../reducers/lines.reducer';
 import VAT_SVG from './VAT.svg';
 
-export const VAT = ({ open, setOpen }) => {
-  const [{ cols, lines }] = useContext(LinesContext);
-  const reportingCols = cols.filter(col => !['ref', 'debit', 'credit', 'mode'].includes(col.id));
+export const VAT = ({ open, setOpen, parameters, lines: mainLines }) => {
+  const [{
+    selectedLines,
+    highlightedLines,
+    lines,
+    cols,
+    unsaved,
+  }, dispatchLinesAction] = useReducer(linesReducer, {
+    ...linesInitialState,
+    lines: mainLines,
+  });
+  const vatLinesContextValue = useMemo(() => ([{
+    selectedLines,
+    highlightedLines,
+    lines,
+    cols: cols.filter(col => !['ref', 'debit', 'credit', 'mode'].includes(col.id)),
+    unsaved,
+  }, dispatchLinesAction]), [selectedLines, highlightedLines, lines, cols, unsaved, dispatchLinesAction]);
 
   const [startQuarter, setStartQuarter] = useState(null);
   const [endQuarter, setEndQuarter] = useState(null);
@@ -117,74 +136,77 @@ export const VAT = ({ open, setOpen }) => {
         </div>
       </Modal.Header>
       <Modal.Content>
-        <main className="ui container">
-          <section className="ui segments">
-            <Form className="ui segment">
-              <Form.Group>
-                <Form.Field inline>
-                  <Form.Select
-                    compact
-                    style={{ width: '200px' }}
-                    options={quarterOptions}
-                    value={startQuarter}
-                    onChange={(_event, { value: val }) => setStartQuarter(val)}
-                    placeholder="Début de la période"
-                  />
-                </Form.Field>
-                <Form.Field inline>
-                  <Form.Select
-                    compact
-                    style={{ width: '200px' }}
-                    options={quarterOptions}
-                    value={endQuarter}
-                    onChange={(_event, { value: val }) => setEndQuarter(val)}
-                    placeholder="Fin de la période"
-                  />
-                </Form.Field>
-              </Form.Group>
-            </Form>
-            <details className="ui segment">
-              <summary>Voir les lignes sélectionnées</summary>
-              <Table
-                uniqueKeyColId={UNIQUE_KEY_COL_ID}
-                cols={reportingCols}
-                lines={filteredLines}
-              />
-            </details>
-            <section className="ui segment fluid">
-              <h3>A - MONTANT DES OPERATIONS REALISEES</h3>
-              <table className="ui celled table">
-                <thead>
-                  <tr>
-                    <th colSpan="2">OPÉRATIONS IMPOSABLES (HT)</th>
-                  </tr>
-                </thead>
-                <tbody>{taxableLines}</tbody>
-                <thead>
-                  <tr>
-                    <th colSpan="2">OPÉRATIONS NON IMPOSABLES</th>
-                  </tr>
-                </thead>
-                <tbody>{notTaxableLines}</tbody>
-              </table>
-              <table />
+        <LinesContext.Provider value={vatLinesContextValue}>
+          <main className="ui container">
+            <section className="ui segments">
+              <Form className="ui segment">
+                <Form.Group>
+                  <Form.Field inline>
+                    <Form.Select
+                      compact
+                      style={{ width: '200px' }}
+                      options={quarterOptions}
+                      value={startQuarter}
+                      onChange={(_event, { value: val }) => setStartQuarter(val)}
+                      placeholder="Début de la période"
+                    />
+                  </Form.Field>
+                  <Form.Field inline>
+                    <Form.Select
+                      compact
+                      style={{ width: '200px' }}
+                      options={quarterOptions}
+                      value={endQuarter}
+                      onChange={(_event, { value: val }) => setEndQuarter(val)}
+                      placeholder="Fin de la période"
+                    />
+                  </Form.Field>
+                </Form.Group>
+              </Form>
+              <details className="ui segment">
+                <summary>Voir les lignes sélectionnées</summary>
+                <Table
+                  uniqueKeyColId={UNIQUE_KEY_COL_ID}
+                  allSelected={false}
+                  scrollableElementId={SCROLLABLE_ELEMENT_ID}
+                  parameters={parameters}
+                />
+              </details>
+              <section className="ui segment fluid">
+                <h3>A - MONTANT DES OPERATIONS REALISEES</h3>
+                <table className="ui celled table">
+                  <thead>
+                    <tr>
+                      <th colSpan="2">OPÉRATIONS IMPOSABLES (HT)</th>
+                    </tr>
+                  </thead>
+                  <tbody>{taxableLines}</tbody>
+                  <thead>
+                    <tr>
+                      <th colSpan="2">OPÉRATIONS NON IMPOSABLES</th>
+                    </tr>
+                  </thead>
+                  <tbody>{notTaxableLines}</tbody>
+                </table>
+                <table />
+              </section>
+              <section className="ui segment">
+                <h3>B - DECOMPTE TVA À PAYER</h3>
+                <table className="ui celled table">
+                  <thead>
+                    <tr>
+                      <th>TVA BRUTE</th>
+                      <th>BASE HT</th>
+                      <th>TAXE DUE</th>
+                    </tr>
+                  </thead>
+                  <tbody>{vatLines}</tbody>
+                </table>
+                <table />
+              </section>
             </section>
-            <section className="ui segment">
-              <h3>B - DECOMPTE TVA À PAYER</h3>
-              <table className="ui celled table">
-                <thead>
-                  <tr>
-                    <th>TVA BRUTE</th>
-                    <th>BASE HT</th>
-                    <th>TAXE DUE</th>
-                  </tr>
-                </thead>
-                <tbody>{vatLines}</tbody>
-              </table>
-              <table />
-            </section>
-          </section>
-        </main>
+          </main>
+        </LinesContext.Provider>
       </Modal.Content>
     </Modal>
   );
@@ -193,6 +215,8 @@ export const VAT = ({ open, setOpen }) => {
 VAT.propTypes = {
   open: bool,
   setOpen: func,
+  parameters: instanceOf(Map).isRequired,
+  lines: arrayOf(shape({ UNIQUE_KEY_COL_ID: string })).isRequired,
 };
 
 VAT.defaultProps = {

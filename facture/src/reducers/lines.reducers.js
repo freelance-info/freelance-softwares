@@ -11,7 +11,6 @@ import {
 export const linesReducer = ({
   lines, selectedLines, highlightedLines, cols, unsaved,
 }, action) => {
-  // console.log(`linesReducer: ${JSON.stringify(action)}`);
   // By default copy initial state
   const newCols = [...cols];
   let newSelectedLines = [...selectedLines];
@@ -31,7 +30,7 @@ export const linesReducer = ({
       }
       break;
     case 'initLines':
-      newLines = addLinesId(action.initLines);
+      newLines = addLinesId(action.initLines, action.uniqueKeyColId);
       sortByCol(newLines, DATE_COL_ID);
       newHighlightedLines = [];
       newSelectedLines = [];
@@ -48,7 +47,7 @@ export const linesReducer = ({
       newUnsaved = true;
       break;
     case 'addLine':
-      newLines.push(addLineId({}, UNIQUE_KEY_COL_ID));
+      newLines.push(addLineId({}, action.uniqueKeyColId));
       cols.forEach(col => {
         if (col.defaultValue) {
           newLines[newLines.length - 1][col.id] = col.defaultValue;
