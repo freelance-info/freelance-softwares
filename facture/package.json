@@ -1,6 +1,6 @@
 {
   "name": "facture-micro-entreprise",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "description": "Simplified invoicing software for freelancers",
   "homepage": "./",
   "private": true,
