@@ -3,10 +3,7 @@ directories:
   buildResources: public
 files:
   - filter:
-      - build/**/*
       - public/**
-extraMetadata:
-  main: build/electron.js
 asarUnpack:
   - public/**
 artifactName: ${productName}.${ext}
@@ -20,5 +17,4 @@ linux:
 mac:
   target: zip
   category: Finance
-extends: react-cra
 electronVersion: 17.3.1

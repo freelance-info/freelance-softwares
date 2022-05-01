@@ -14,10 +14,7 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
-    "csv-parser": "^2.3.2",
-    "csv-writer": "^1.5.0",
     "env-cmd": "^10.0.1",
-    "fs": "0.0.1-security",
     "npm-watch": "^0.11.0",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
@@ -25,7 +22,22 @@
     "react-scripts": "^4.0.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.1.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.5.5",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.5.0",
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {
+    "electron": "17.3.1",
+    "electron-builder": "^23.0.2",
+    "concurrently": "^5.1.0",
+    "eslint": "7.11.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.21.4",
+    "eslint-plugin-react-hooks": "^4.1.2",
+    "wait-on": "^4.0.0"
   },
   "scripts": {
     "start": "concurrently --kill-others \"env-cmd -r .env.electron -e development craco start\" \"wait-on tcp:3000 && env-cmd -r .env.electron -e development electron src/main.js\"",
@@ -50,18 +62,6 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "devDependencies": {
-    "concurrently": "^5.1.0",
-    "electron": "17.3.1",
-    "electron-builder": "^23.0.2",
-    "eslint": "7.11.0",
-    "eslint-config-airbnb": "^18.2.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-react": "^7.21.4",
-    "eslint-plugin-react-hooks": "^4.1.2",
-    "wait-on": "^4.0.0"
-  },
   "main": "electron.js",
   "build": {
     "files": [

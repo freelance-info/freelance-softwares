@@ -20,7 +20,7 @@ function App() {
     setVersion(theVersion);
 
     // Window title
-    let title = "Freelance-compta";
+    let title = "Freelance Factures";
     if (parameters.has(PARAMETER_ENTREPRISE_NAME)) {
       title += ` de ${parameters.get(PARAMETER_ENTREPRISE_NAME)}`;
     }

@@ -3,6 +3,10 @@
   "private": true,
   "version": "0.3.0",
   "workspaces": {
-    "packages": ["./common", "./compta", "./facture"]
+    "packages": [
+      "./common",
+      "./compta",
+      "./facture"
+    ]
   }
 }
