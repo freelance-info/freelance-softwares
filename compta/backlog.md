@@ -27,6 +27,11 @@
  - calendrier avec type presta et client
 ## documents à produire:
  - Déclaration 2035
- - Déclaration de TVA régime simplifié (3514-SD 3517-SD)
+ - Déclaration de TVA régime simplifié:
+   - 3514-SD: Pour calculer le montant des acomptes de TVA semestriels, il faut prendre en compte le montant de TVA due au titre de l’exercice précédent et l'additionner avec la TVA déductible sur les immobilisations (investissement de biens corporels ou incorporels).
+     - Le montant des acomptes de TVA est différent entre l’acompte du mois de juillet et celui de décembre :
+     - Pour l’acompte de TVA de juillet, le montant est fixé à 55% de la TVA due l’année N-1 ;
+     - Pour l’acompte de TVA de décembre, le montant est fixé à 40% de la TVA due l’année N-1.
+   - 3517-SD
  - Télé-transmission de la liasse fiscale à votre AGA
  - compléter la doc avec les documents légaux, n° de comptes à créditer/débiter
