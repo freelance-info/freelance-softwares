@@ -32,6 +32,6 @@
      - Le montant des acomptes de TVA est différent entre l’acompte du mois de juillet et celui de décembre :
      - Pour l’acompte de TVA de juillet, le montant est fixé à 55% de la TVA due l’année N-1 ;
      - Pour l’acompte de TVA de décembre, le montant est fixé à 40% de la TVA due l’année N-1.
-   - 3517-SD
+   - 3517-S: déclaration annuelle
  - Télé-transmission de la liasse fiscale à votre AGA
  - compléter la doc avec les documents légaux, n° de comptes à créditer/débiter
