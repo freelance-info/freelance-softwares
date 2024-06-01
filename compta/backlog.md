@@ -27,6 +27,6 @@
  - calendrier avec type presta et client
 ## documents à produire:
  - Déclaration 2035
- - Déclaration de TVA
+ - Déclaration de TVA régime simplifié (3514-SD 3517-SD)
  - Télé-transmission de la liasse fiscale à votre AGA
  - compléter la doc avec les documents légaux, n° de comptes à créditer/débiter
